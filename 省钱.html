@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>真实客户节省 · 合并物流对比</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ===== 全局重置 & 基础 ===== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #e8e8e8;
+            font-family: 'Inter', 'Arial', system-ui, -apple-system, sans-serif;
+            padding: 20px;
+        }
+
+        /* ===== 卡片容器 ===== */
+        .savings-card {
+            max-width: 1120px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 40px 44px 32px 44px;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.07);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .savings-card:hover {
+            box-shadow: 0 16px 56px rgba(0, 0, 0, 0.10);
+        }
+
+        /* ===== 标题 ===== */
+        .savings-title {
+            font-size: 26px;
+            font-weight: 900;
+            color: #111;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 32px;
+            font-family: 'Inter', 'Arial', sans-serif;
+        }
+
+        /* ===== 三栏 Flex 容器 ===== */
+        .compare-grid {
+            display: flex;
+            gap: 0;
+            align-items: stretch;
+            margin-bottom: 20px;
+        }
+
+        /* ===== 每一栏 ===== */
+        .compare-col {
+            flex: 1;
+            border-radius: 18px;
+            padding: 22px 18px 18px 18px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .compare-col:hover {
+            transform: translateY(-2px);
+        }
+
+        /* ---- 板块1：Without Consolidation (浅灰) ---- */
+        .compare-col.without-col {
+            background: #f0f2f5;
+        }
+        .compare-col.without-col:hover {
+            background: #e6e9ee;
+        }
+
+        /* ---- 板块2：With Consolidation (浅绿) ---- */
+        .compare-col.with-col {
+            background: #e6f4ea;
+        }
+        .compare-col.with-col:hover {
+            background: #d4edda;
+        }
+
+        /* ---- 板块3：You Save (白色底 + 橙色边框) 居中 ---- */
+        .compare-col.save-col {
+            background: #ffffff;
+            border: 2.5px solid #f57c00;
+            border-radius: 18px;
+            padding: 20px 18px 18px 18px;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #f57c00;
+            box-shadow: 0 2px 8px rgba(245, 124, 0, 0.08);
+            flex: 1;
+        }
+        .compare-col.save-col:hover {
+            border-color: #e06b00;
+            box-shadow: 0 6px 20px rgba(245, 124, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        /* ===== 箭头连接器 (位于两个板块之间) ===== */
+        .arrow-connector {
+            flex: 0 0 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* 让箭头垂直居中 */
+            align-self: center;
+            height: 100%;
+            min-height: 80px;
+        }
+
+        .save-arrow {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: #f57c00;
+            color: #ffffff;
+            border-radius: 50%;
+            font-size: 20px;
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 10px rgba(245, 124, 0, 0.30);
+            cursor: default;
+            flex-shrink: 0;
+        }
+
+        .save-arrow:hover {
+            transform: scale(1.10);
+            background: #e06b00;
+            box-shadow: 0 4px 16px rgba(245, 124, 0, 0.40);
+        }
+
+        /* ===== 栏目标签 ===== */
+        .col-label {
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 16px;
+            text-align: center;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.06);
+            padding-bottom: 12px;
+            color: #222;
+        }
+
+        .col-label.without-label {
+            color: #666;
+            border-bottom-color: rgba(0, 0, 0, 0.06);
+        }
+
+        .col-label.with-label {
+            color: #1e6b2b;
+            border-bottom-color: rgba(30, 107, 43, 0.15);
+        }
+
+        /* ---- 板块3 标签 字体加大 ---- */
+        .save-col .col-label {
+            color: #f57c00;
+            border-bottom-color: rgba(245, 124, 0, 0.20);
+            font-size: 18px;   /* 从15px增大 */
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+            padding-bottom: 10px;
+        }
+
+        /* ===== 数据列表 ===== */
+        .data-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+        }
+
+        .data-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 4px 10px 2px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: background 0.15s ease;
+            border-radius: 6px;
+        }
+
+        .data-item:last-of-type {
+            border-bottom: none;
+        }
+
+        .data-item:hover {
+            background: rgba(255, 255, 255, 0.35);
+        }
+        .without-col .data-item:hover {
+            background: rgba(0, 0, 0, 0.03);
+        }
+        .with-col .data-item:hover {
+            background: rgba(46, 125, 50, 0.06);
+        }
+
+        /* ---- 标签 + 图标 ---- */
+        .data-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 400;
+            color: #444;
+            font-size: 15px;
+        }
+
+        .data-label .icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 14px;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+        }
+
+        /* 板块1 图标（灰色系） */
+        .without-col .data-label .icon {
+            background: rgba(0, 0, 0, 0.06);
+            color: #777;
+        }
+        .without-col .data-item:hover .icon {
+            background: #888;
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        /* 板块2 图标（绿色同色系） */
+        .with-col .data-label .icon {
+            background: rgba(30, 107, 43, 0.13);
+            color: #1e6b2b;
+        }
+        .with-col .data-item:hover .icon {
+            background: #1e6b2b;
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        /* ---- 数值 ---- */
+        .data-value {
+            font-weight: 700;
+            color: #111;
+            font-size: 17px;
+            letter-spacing: 0.2px;
+        }
+
+        .data-value.green-highlight {
+            color: #1e6b2b;
+            font-size: 19px;
+        }
+
+        /* ============================================================
+                   板块3 节省内容 (字体加大)
+                   ============================================================ */
+        .save-amount {
+            font-size: 72px;   /* 从62px增大 */
+            font-weight: 900;
+            color: #f57c00;
+            line-height: 1.1;
+            margin: 2px 0 8px 0;
+            font-family: 'Inter', 'Arial', sans-serif;
+            letter-spacing: -1px;
+        }
+
+        .save-items {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            width: 100%;
+            margin-top: 2px;
+        }
+
+        .save-item {
+            font-size: 20px;   /* 从16px增大 */
+            font-weight: 700;
+            color: #f57c00;
+            letter-spacing: 0.4px;
+            padding: 4px 0;
+        }
+
+        /* 分割线已移除，不需要样式 */
+
+        /* ===== 脚注 ===== */
+        .footnote {
+            font-size: 13px;
+            color: #999;
+            text-align: center;
+            line-height: 1.6;
+            border-top: 1px solid #eee;
+            padding-top: 18px;
+            margin-top: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        /* ============================================================
+                   响应式设计
+                   ============================================================ */
+
+        /* 平板及以下 → 单列，箭头适当缩小 */
+        @media (max-width: 820px) {
+            .savings-card {
+                padding: 28px 20px 24px 20px;
+            }
+
+            .compare-grid {
+                flex-wrap: wrap;
+                gap: 18px 0;
+            }
+
+            .compare-col {
+                flex: 0 0 100%;
+                width: 100%;
+            }
+
+            .arrow-connector {
+                flex: 0 0 20px;
+                min-height: 20px;
+                height: 20px;
+                width: 100%;
+                align-self: center;
+            }
+
+            .save-arrow {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+
+            .savings-title {
+                font-size: 22px;
+                letter-spacing: 2px;
+            }
+
+            /* 平板下调整节省板块字体 */
+            .save-amount {
+                font-size: 58px;
+            }
+            .save-item {
+                font-size: 18px;
+            }
+            .save-col .col-label {
+                font-size: 16px;
+            }
+            .compare-col.save-col {
+                padding: 20px 18px 18px 18px;
+            }
+            .data-item {
+                padding: 8px 2px;
+            }
+        }
+
+        /* 小屏手机 */
+        @media (max-width: 420px) {
+            .savings-card {
+                padding: 18px 12px 16px 12px;
+                border-radius: 20px;
+            }
+            .savings-title {
+                font-size: 18px;
+                letter-spacing: 1.5px;
+                margin-bottom: 20px;
+            }
+            .data-label {
+                font-size: 14px;
+                gap: 8px;
+            }
+            .data-label .icon {
+                width: 26px;
+                height: 26px;
+                font-size: 12px;
+            }
+            .data-value {
+                font-size: 15px;
+            }
+            .data-value.green-highlight {
+                font-size: 17px;
+            }
+            /* 手机下进一步缩小 */
+            .save-amount {
+                font-size: 44px;
+            }
+            .save-item {
+                font-size: 16px;
+            }
+            .save-col .col-label {
+                font-size: 15px;
+            }
+            .col-label {
+                font-size: 13px;
+                letter-spacing: 1px;
+                padding-bottom: 8px;
+                margin-bottom: 10px;
+            }
+            .compare-col {
+                padding: 16px 12px 14px 12px;
+                border-radius: 14px;
+            }
+            .compare-col.save-col {
+                padding: 16px 12px 14px 12px;
+                border-width: 2px;
+            }
+            .footnote {
+                font-size: 11.5px;
+                padding-top: 14px;
+            }
+            .arrow-connector {
+                flex: 0 0 16px;
+                min-height: 16px;
+                height: 16px;
+            }
+            .save-arrow {
+                width: 30px;
+                height: 30px;
+                font-size: 14px;
+            }
+        }
+
+        /* ===== 深色模式适配 ===== */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #1a1a1a;
+            }
+            .savings-card {
+                background: #242424;
+                box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+            }
+            .savings-card:hover {
+                box-shadow: 0 16px 56px rgba(0, 0, 0, 0.6);
+            }
+            .savings-title {
+                color: #f0f0f0;
+            }
+            .compare-col.without-col {
+                background: #2c2c2c;
+            }
+            .compare-col.without-col:hover {
+                background: #363636;
+            }
+            .compare-col.with-col {
+                background: #1e3a2a;
+            }
+            .compare-col.with-col:hover {
+                background: #264f35;
+            }
+            .compare-col.save-col {
+                background: #1e1e1e;
+                border-color: #d46a00;
+            }
+            .compare-col.save-col:hover {
+                border-color: #bf5f00;
+            }
+            .col-label.without-label {
+                color: #aaa;
+                border-bottom-color: rgba(255, 255, 255, 0.06);
+            }
+            .col-label.with-label {
+                color: #6fbf7a;
+                border-bottom-color: rgba(111, 191, 122, 0.15);
+            }
+            .save-col .col-label {
+                color: #f57c00;
+                border-bottom-color: rgba(245, 124, 0, 0.20);
+            }
+            .data-label {
+                color: #ccc;
+            }
+            .data-value {
+                color: #eee;
+            }
+            .data-value.green-highlight {
+                color: #6fbf7a;
+            }
+            .without-col .data-label .icon {
+                background: rgba(255, 255, 255, 0.08);
+                color: #aaa;
+            }
+            .without-col .data-item:hover .icon {
+                background: #aaa;
+                color: #1a1a1a;
+            }
+            .with-col .data-label .icon {
+                background: rgba(111, 191, 122, 0.18);
+                color: #6fbf7a;
+            }
+            .with-col .data-item:hover .icon {
+                background: #6fbf7a;
+                color: #1a1a1a;
+            }
+            .data-item {
+                border-bottom-color: rgba(255, 255, 255, 0.05);
+            }
+            .without-col .data-item:hover {
+                background: rgba(255, 255, 255, 0.04);
+            }
+            .with-col .data-item:hover {
+                background: rgba(111, 191, 122, 0.08);
+            }
+            .footnote {
+                color: #888;
+                border-top-color: #333;
+            }
+            .save-amount {
+                color: #f57c00;
+            }
+            .save-item {
+                color: #f57c00;
+            }
+            .save-arrow {
+                background: #d46a00;
+                color: #fff;
+                box-shadow: 0 2px 10px rgba(212, 106, 0, 0.30);
+            }
+            .save-arrow:hover {
+                background: #bf5f00;
+                box-shadow: 0 4px 16px rgba(212, 106, 0, 0.40);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="savings-card" role="region" aria-label="物流节省对比卡片">
+
+        <!-- 标题 -->
+        <h2 class="savings-title">Real Customer Savings</h2>
+
+        <!-- 三栏对比：顺序为 Without | Save | With ，箭头位于间隙 -->
+        <div class="compare-grid">
+
+            <!-- ===== 板块1：未合并 (浅灰) ===== -->
+            <div class="compare-col without-col" role="group" aria-label="未合并物流方案">
+                <div class="col-label without-label">Without Consolidation</div>
+                <dl class="data-list">
+                    <div class="data-item">
+                        <dt class="data-label">
+                            <span class="icon" aria-hidden="true"><i class="fas fa-box"></i></span>
+                            Packages
+                        </dt>
+                        <dd class="data-value">5</dd>
+                    </div>
+                    <div class="data-item">
+                        <dt class="data-label">
+                            <span class="icon" aria-hidden="true"><i class="fas fa-dollar-sign"></i></span>
+                            Shipping Cost
+                        </dt>
+                        <dd class="data-value">$180</dd>
+                    </div>
+                    <div class="data-item">
+                        <dt class="data-label">
+                            <span class="icon" aria-hidden="true"><i class="fas fa-cube"></i></span>
+                            Volume
+                        </dt>
+                        <dd class="data-value">0.62 m³</dd>
+                    </div>
+                </dl>
+            </div>
+
+            <!-- ===== 箭头连接器 1 (板块1 与 板块3 之间) ===== -->
+            <div class="arrow-connector" aria-hidden="true">
+                <span class="save-arrow"><i class="fas fa-arrow-right"></i></span>
+            </div>
+
+            <!-- ===== 板块3：节省 (白色底 + 橙色边框) 居中 ===== -->
+            <div class="compare-col save-col" role="group" aria-label="您节省的金额和比例">
+                <div class="col-label">You Save</div>
+                <div class="save-amount" aria-label="节省 54 美元">$54</div>
+                <div class="save-items">
+                    <span class="save-item">30% Less Cost</span>
+                    <span class="save-item">35% Less Volume</span>
+                    <!-- 分割线已删除 -->
+                </div>
+            </div>
+
+            <!-- ===== 箭头连接器 2 (板块3 与 板块2 之间) ===== -->
+            <div class="arrow-connector" aria-hidden="true">
+                <span class="save-arrow"><i class="fas fa-arrow-right"></i></span>
+            </div>
+
+            <!-- ===== 板块2：合并后 (浅绿) ===== -->
+            <div class="compare-col with-col" role="group" aria-label="合并物流方案">
+                <div class="col-label with-label">With Consolidation</div>
+                <dl class="data-list">
+                    <div class="data-item">
+                        <dt class="data-label">
+                            <span class="icon" aria-hidden="true"><i class="fas fa-box"></i></span>
+                            Packages
+                        </dt>
+                        <dd class="data-value">1</dd>
+                    </div>
+                    <div class="data-item">
+                        <dt class="data-label">
+                            <span class="icon" aria-hidden="true"><i class="fas fa-dollar-sign"></i></span>
+                            Shipping Cost
+                        </dt>
+                        <dd class="data-value green-highlight">$126</dd>
+                    </div>
+                    <div class="data-item">
+                        <dt class="data-label">
+                            <span class="icon" aria-hidden="true"><i class="fas fa-cube"></i></span>
+                            Volume
+                        </dt>
+                        <dd class="data-value green-highlight">0.40 m³</dd>
+                    </div>
+                </dl>
+            </div>
+
+        </div>
+
+        <!-- 脚注（英文） -->
+        <p class="footnote">
+            <i class="fas fa-info-circle" aria-hidden="true" style="margin-right: 6px; opacity: 0.5;"></i>
+            Savings amount may vary depending on package size, weight and destination.
+        </p>
+
+    </div>
+
+</body>
+</html>
