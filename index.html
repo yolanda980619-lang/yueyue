@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Global Shipping · 品牌页</title>
+    <!-- Font Awesome 6 (免费) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ============================================================
+                   CSS 变量 – 统一主题（强制白色背景）
+                   ============================================================ */
+        :root {
+            --primary: #f57c00;
+            --primary-dark: #e06b00;
+            --primary-light: #fff3e0;
+            --bg-page: #ffffff;
+            --card-bg: #ffffff;
+            --card-radius: 20px;
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.07);
+            --shadow-hover: 0 12px 52px rgba(0, 0, 0, 0.12);
+            --font-family: 'Inter', 'Arial', system-ui, -apple-system, sans-serif;
+            --max-width: 1200px;
+            --section-gap: 44px;
+            --text-dark: #111;
+            --text-muted: #555;
+            --text-light: #888;
+        }
+
+        /* ============================================================
+                   全局重置
+                   ============================================================ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--bg-page);
+            font-family: var(--font-family);
+            padding: 24px 20px;
+        }
+
+        /* ============================================================
+                   页面容器
+                   ============================================================ */
+        .page-container {
+            max-width: var(--max-width);
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: var(--section-gap);
+        }
+
+        /* ============================================================
+                   每个版块共用卡片样式 (白色背景)
+                   ============================================================ */
+        .section-card {
+            background: var(--card-bg);
+            border-radius: var(--card-radius);
+            box-shadow: var(--shadow);
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+            overflow: hidden;
+        }
+
+        .section-card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* ============================================================
+                   版块 1：Global Shipping Poster (1900×600 比例)
+                   ============================================================ */
+        .poster {
+            width: 100%;
+            aspect-ratio: 1900 / 600;
+            background: #ffffff;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            border-radius: var(--card-radius);
+        }
+
+        .poster-left {
+            flex: 0 0 55%;
+            padding: 5.5% 4% 5.5% 6.5%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .poster-title-main {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+            margin-bottom: 6px;
+        }
+
+        .poster-title-row {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 4px 8px;
+        }
+
+        .poster-title-base {
+            font-size: clamp(22px, 3.2vw, 38px);
+            font-weight: 700;
+            color: #000;
+            letter-spacing: 0.5px;
+        }
+
+        .poster-title-highlight {
+            font-size: clamp(30px, 4.4vw, 52px);
+            font-weight: 900;
+            color: var(--primary);
+            letter-spacing: -1px;
+        }
+
+        .poster-title-sub {
+            font-size: clamp(22px, 3.2vw, 38px);
+            font-weight: 700;
+            color: #000;
+            letter-spacing: 0.5px;
+            margin-top: -2px;
+        }
+
+        .poster-desc {
+            font-size: clamp(14px, 1.5vw, 18px);
+            font-weight: 400;
+            color: var(--text-muted);
+            line-height: 1.7;
+            max-width: 580px;
+            margin-top: 12px;
+            margin-bottom: 18px;
+            letter-spacing: 0.2px;
+        }
+
+        .poster-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px 32px;
+            margin-bottom: 24px;
+        }
+
+        .poster-feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: clamp(13px, 1.3vw, 16px);
+            font-weight: 500;
+            color: #000;
+            letter-spacing: 0.2px;
+        }
+
+        .poster-feature .icon-check {
+            width: 22px;
+            height: 22px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .poster-cta-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 2px;
+            flex-wrap: nowrap;
+        }
+
+        /* 按钮改为 <a> 标签，保留所有样式 */
+        .poster-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 38px;
+            background: var(--primary);
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;          /* 移除下划线 */
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            font-family: var(--font-family);
+            box-shadow: 0 6px 20px rgba(245, 124, 0, 0.30);
+            transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+            white-space: nowrap;
+        }
+
+        .poster-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(245, 124, 0, 0.35);
+        }
+
+        .poster-btn::after {
+            content: '→';
+            margin-left: 10px;
+            font-size: 20px;
+            transition: transform 0.25s;
+        }
+
+        .poster-btn:hover::after {
+            transform: translateX(4px);
+        }
+
+        .poster-btn-sub {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-light);
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        .poster-right {
+            flex: 1;
+            padding: 5% 6% 5% 3%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .poster-right img {
+            width: 100%;
+            max-width: 520px;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .poster-right img:hover {
+            transform: scale(1.01);
+        }
+
+        /* ============================================================
+                   版块 2：How It Works
+                   ============================================================ */
+        .hiw-inner {
+            padding: 44px 48px 38px 48px;
+        }
+
+        .hiw-header {
+            text-align: center;
+            margin-bottom: 34px;
+        }
+
+        .hiw-title {
+            font-size: clamp(24px, 2.6vw, 32px);
+            font-weight: 900;
+            color: #000;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            display: inline-block;
+            position: relative;
+        }
+
+        .hiw-title::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -8px;
+            width: 52px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 18px 16px;
+        }
+
+        .step-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 14px 6px 10px 6px;
+            border-radius: 16px;
+            transition: background 0.25s, box-shadow 0.25s, transform 0.25s;
+            cursor: default;
+        }
+
+        .step-item:hover {
+            background: #fafafa;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            transform: translateY(-3px);
+        }
+
+        .step-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            transition: background 0.3s, transform 0.3s;
+            flex-shrink: 0;
+        }
+
+        .step-item:hover .step-icon {
+            background: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .step-icon i {
+            font-size: 28px;
+            color: var(--primary);
+            transition: color 0.3s;
+        }
+
+        .step-item:hover .step-icon i {
+            color: #fff;
+        }
+
+        .step-number {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            background: var(--primary);
+            border-radius: 30px;
+            padding: 2px 16px;
+            display: inline-block;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            transition: background 0.25s;
+        }
+
+        .step-item:hover .step-number {
+            background: var(--primary-dark);
+        }
+
+        .step-heading {
+            font-size: clamp(14px, 1.4vw, 17px);
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+
+        .step-desc {
+            font-size: clamp(12px, 1.1vw, 13.5px);
+            font-weight: 400;
+            color: var(--text-muted);
+            line-height: 1.6;
+            max-width: 180px;
+        }
+
+        /* ============================================================
+                   响应式 – 保留前两个板块的适配
+                   ============================================================ */
+        @media (max-width: 1400px) {
+            .poster-left {
+                padding: 5% 4% 5% 5%;
+            }
+            .poster-right {
+                padding: 5% 5% 5% 2%;
+            }
+            .poster-right img {
+                max-width: 420px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .poster-right img {
+                max-width: 360px;
+            }
+            .hiw-inner {
+                padding: 32px 28px 28px 28px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .poster {
+                aspect-ratio: auto;
+                flex-direction: column;
+                height: auto;
+            }
+            .poster-left {
+                flex: none;
+                padding: 32px 28px 18px 28px;
+            }
+            .poster-right {
+                flex: none;
+                padding: 8px 28px 28px 28px;
+                align-items: center;
+                width: 100%;
+            }
+            .poster-right img {
+                max-width: 80%;
+            }
+            .poster-desc {
+                max-width: 100%;
+            }
+            .poster-features {
+                gap: 10px 20px;
+            }
+
+            .steps-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px 14px;
+            }
+            .step-desc {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 640px) {
+            :root {
+                --section-gap: 28px;
+            }
+            body {
+                padding: 12px 10px;
+            }
+            .poster-left {
+                padding: 22px 16px 12px 16px;
+            }
+            .poster-right {
+                padding: 4px 16px 18px 16px;
+            }
+            .poster-right img {
+                max-width: 90%;
+            }
+            .poster-cta-wrapper {
+                gap: 12px;
+            }
+            .poster-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            .poster-btn-sub {
+                font-size: 12px;
+            }
+            .poster-features {
+                gap: 8px 14px;
+                margin-bottom: 16px;
+            }
+            .poster-feature {
+                font-size: 13px;
+            }
+            .poster-feature .icon-check {
+                width: 18px;
+                height: 18px;
+                font-size: 11px;
+            }
+
+            .hiw-inner {
+                padding: 24px 16px 20px 16px;
+            }
+            .hiw-header {
+                margin-bottom: 22px;
+            }
+            .steps-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 16px 12px;
+            }
+            .step-icon {
+                width: 52px;
+                height: 52px;
+            }
+            .step-icon i {
+                font-size: 22px;
+            }
+            .step-heading {
+                font-size: 14px;
+            }
+            .step-desc {
+                font-size: 12px;
+            }
+            .step-number {
+                font-size: 11px;
+                padding: 1px 12px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .steps-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .step-desc {
+                max-width: 200px;
+            }
+            .poster-cta-wrapper {
+                gap: 8px;
+            }
+            .poster-btn {
+                padding: 8px 14px;
+                font-size: 12px;
+            }
+            .poster-btn::after {
+                font-size: 14px;
+                margin-left: 6px;
+            }
+            .poster-btn-sub {
+                font-size: 10px;
+            }
+        }
+
+        /* ============================================================
+                   强制白色背景（覆盖深色模式）
+                   ============================================================ */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-page: #ffffff;
+                --card-bg: #ffffff;
+                --shadow: 0 8px 40px rgba(0, 0, 0, 0.07);
+                --shadow-hover: 0 12px 52px rgba(0, 0, 0, 0.12);
+                --text-dark: #111;
+                --text-muted: #555;
+                --text-light: #888;
+            }
+
+            body {
+                background: #ffffff;
+            }
+
+            .section-card {
+                background: #ffffff;
+            }
+
+            .poster {
+                background: #ffffff;
+            }
+
+            .poster-title-base,
+            .poster-title-sub,
+            .poster-feature,
+            .hiw-title,
+            .step-heading {
+                color: #111;
+            }
+
+            .poster-desc,
+            .step-desc,
+            .poster-btn-sub {
+                color: #555;
+            }
+
+            .step-item:hover {
+                background: #f5f5f5;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-container">
+
+        <!-- ==========================================================
+        版块 1：Global Shipping Poster
+        ========================================================== -->
+        <section class="section-card poster" aria-label="全球航运海报">
+            <div class="poster-left">
+                <div class="poster-title-main">
+                    <div class="poster-title-row">
+                        <span class="poster-title-base">Save up to</span>
+                        <span class="poster-title-highlight">30%</span>
+                    </div>
+                    <div class="poster-title-sub">on global shipping</div>
+                </div>
+
+                <p class="poster-desc">
+                    Consolidate multiple Taobao packages into one optimized shipment,
+                    reduce volume, and pay less for international shipping.
+                </p>
+
+                <div class="poster-features">
+                    <span class="poster-feature">
+                        <span class="icon-check">✓</span> Quality Inspection
+                    </span>
+                    <span class="poster-feature">
+                        <span class="icon-check">✓</span> Repacking to Reduce Volume
+                    </span>
+                    <span class="poster-feature">
+                        <span class="icon-check">✓</span> Door-to-Door Worldwide
+                    </span>
+                </div>
+
+                <div class="poster-cta-wrapper">
+                    <!-- 按钮改为可点击的链接，指向 WhatsApp -->
+                    <a href="https://api.whatsapp.com/send/?phone=8615277893551&text&type=phone_number&app_absent=0"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="poster-btn">
+                        Consolidate My Packages
+                    </a>
+                    <span class="poster-btn-sub">Get your shipping quote in minutes.</span>
+                </div>
+            </div>
+
+            <div class="poster-right">
+                <img src="https://i.postimg.cc/tgPJYwZn/3.png" alt="合并前后对比示意" loading="lazy" />
+            </div>
+        </section>
+
+        <!-- ==========================================================
+        版块 2：How It Works
+        ========================================================== -->
+        <section class="section-card" aria-label="操作流程">
+            <div class="hiw-inner">
+                <div class="hiw-header">
+                    <h2 class="hiw-title">How It Works</h2>
+                </div>
+
+                <div class="steps-grid">
+                    <div class="step-item">
+                        <div class="step-icon"><i class="fas fa-list-check"></i></div>
+                        <span class="step-number">1</span>
+                        <div class="step-heading">send request</div>
+                        <div class="step-desc">Submit your package list and details.</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-icon"><i class="fas fa-magnifying-glass"></i></div>
+                        <span class="step-number">2</span>
+                        <div class="step-heading">Quality Control</div>
+                        <div class="step-desc">We inspect every item to ensure quality.</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-icon"><i class="fas fa-boxes-stacked"></i></div>
+                        <span class="step-number">3</span>
+                        <div class="step-heading">Repack &amp; Optimize</div>
+                        <div class="step-desc">Remove excess packaging and reduce volume.</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-icon"><i class="fas fa-coins"></i></div>
+                        <span class="step-number">4</span>
+                        <div class="step-heading">Confirm cost</div>
+                        <div class="step-desc">Review and approve the shipping cost.</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-icon"><i class="fas fa-globe"></i></div>
+                        <span class="step-number">5</span>
+                        <div class="step-heading">Ship Worldwide</div>
+                        <div class="step-desc">We ship to your door and provide tracking.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+    <!-- end page-container -->
+
+</body>
+</html>
